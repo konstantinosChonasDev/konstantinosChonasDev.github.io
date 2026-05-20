@@ -598,6 +598,41 @@
       margin-top: 2.5rem;
     }
 
+    .contact-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .65rem;
+      margin-top: 1.75rem;
+    }
+
+    .email-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .55rem 1.25rem .55rem 1rem;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.65);
+      font-size: .85rem;
+      letter-spacing: .01em;
+      transition: border-color var(--ease), background var(--ease);
+    }
+
+    .email-badge:hover {
+      border-color: rgba(255,255,255,.25);
+      background: rgba(255,255,255,.1);
+    }
+
+    .email-badge svg { flex-shrink: 0; opacity: .55; }
+
+    .email-badge span {
+      color: var(--white);
+      font-weight: 500;
+      user-select: all;
+    }
+
     .link-email {
       color: rgba(255,255,255,.65);
       text-decoration: none;
@@ -898,7 +933,18 @@
           </svg>
           Στείλε μου μήνυμα
         </a>
-        <a href="mailto:konstantinos.chonas@gmail.com" class="link-email">ή στείλε email</a>
+        <a href="mailto:konstantinos.chonas@gmail.com?subject=%CE%9D%CE%AD%CE%B1%20%CF%83%CF%85%CE%BD%CE%B5%CF%81%CE%B3%CE%B1%CF%83%CE%AF%CE%B1" class="link-email" id="email-link" data-email="konstantinos.chonas@gmail.com">ή στείλε email</a>
+      </div>
+
+      <div class="contact-badges reveal d2">
+        <div class="email-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+          <span>konstantinos.chonas@gmail.com</span>
+        </div>
+        <div class="email-badge">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 01.1 1.18 2 2 0 012.08 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <span>+30 698 075 3236</span>
+        </div>
       </div>
     </div>
   </div>
@@ -945,6 +991,25 @@
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Desktop fallback for browsers with no default mail app configured.
+  const emailLink = document.getElementById('email-link');
+  if (emailLink && globalThis.matchMedia('(pointer: fine)').matches) {
+    emailLink.addEventListener('click', () => {
+      const to = emailLink.dataset.email;
+      const subject = encodeURIComponent('Νέα συνεργασία');
+      const gmailCompose = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${subject}`;
+
+      setTimeout(() => {
+        if (document.visibilityState === 'visible') {
+          const useWebmail = confirm('Αν δεν άνοιξε εφαρμογή email, να ανοίξει email στο browser;');
+          if (useWebmail) {
+            window.open(gmailCompose, '_blank', 'noopener,noreferrer');
+          }
+        }
+      }, 700);
+    });
+  }
 </script>
 </body>
 </html>
